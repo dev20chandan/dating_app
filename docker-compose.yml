@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: dating_mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=dating-app
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dating_backend
+    ports:
+      - '3000:3000'
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/dating-app
+      - JWT_SECRET=superSecretDatingAppKey123
+    volumes:
+      - ./backend/uploads:/usr/src/app/uploads
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
