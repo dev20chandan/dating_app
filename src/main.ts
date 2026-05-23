@@ -17,7 +17,9 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   
   const helmet = require('helmet');
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: false,
+  }));
   app.enableCors();
   
   const morgan = require('morgan');
