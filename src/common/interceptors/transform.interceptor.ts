@@ -20,7 +20,13 @@ export class TransformInterceptor<T>
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<Response<T>> {
+  ): Observable<Response<T> | any> {
+    const request = context.switchToHttp().getRequest();
+    // Skip formatting for swagger docs endpoints
+    if (request.url && request.url.startsWith('/api/docs')) {
+      return next.handle();
+    }
+
     return next.handle().pipe(
       map((data) => {
         let message = 'Success';
