@@ -20,7 +20,8 @@ export class ProfilesService {
       ...createProfileDto,
       userId: new Types.ObjectId(userId) as any,
     });
-    return newProfile.save();
+    const savedProfile = await newProfile.save();
+    return savedProfile.toObject();
   }
 
   async getProfile(userId: string) {
@@ -28,7 +29,7 @@ export class ProfilesService {
     if (!profile) {
       throw new NotFoundException('Profile not found');
     }
-    return profile;
+    return profile.toObject();
   }
 
   async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
@@ -41,6 +42,6 @@ export class ProfilesService {
     if (!profile) {
       throw new NotFoundException('Profile not found');
     }
-    return profile;
+    return profile.toObject();
   }
 }

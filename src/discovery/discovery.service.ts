@@ -16,7 +16,7 @@ export class DiscoveryService {
     @InjectModel(Match.name) private matchModel: Model<MatchDocument>,
     @InjectModel(BlockedUser.name) private blockedUserModel: Model<BlockedUserDocument>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  ) { }
 
   async getRecommendations(userId: string, page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
@@ -49,6 +49,8 @@ export class DiscoveryService {
       ...matchedUserIds,
       ...blockedUserIds,
     ];
+
+    console.log(excludedUserIds, '====>>>1')
 
     // Pipeline
     const pipeline: any[] = [];
@@ -170,7 +172,6 @@ export class DiscoveryService {
 
     const results = await this.profileModel.aggregate(pipeline).exec();
 
-    // Cache the results for 60 seconds
     await this.cacheManager.set(cacheKey, results, 60000);
 
     return results;

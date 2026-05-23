@@ -26,19 +26,31 @@ export class TransformInterceptor<T>
         let message = 'Success';
         let body = data;
 
+        let processedData = data;
+        // Handle Mongoose documents
+        if (processedData && typeof processedData.toJSON === 'function') {
+          processedData = processedData.toJSON();
+        } else if (Array.isArray(processedData)) {
+          processedData = processedData.map(item => 
+            (item && typeof item.toJSON === 'function') ? item.toJSON() : item
+          );
+        }
+
         // If the response object already has a message string, use it
-        if (data && typeof data === 'object' && !Array.isArray(data)) {
-          if (typeof data.message === 'string') {
-            message = data.message;
+        if (processedData && typeof processedData === 'object' && !Array.isArray(processedData)) {
+          if (typeof processedData.message === 'string') {
+            message = processedData.message;
           }
 
-          if ('body' in data) {
-            body = data.body;
+          if ('body' in processedData) {
+            body = processedData.body;
           } else {
             // Strip out the message property if it exists, use the rest as body
-            const { message: _msg, ...rest } = data;
+            const { message: _msg, ...rest } = processedData;
             body = Object.keys(rest).length > 0 ? rest : null;
           }
+        } else {
+          body = processedData;
         }
 
         return {
