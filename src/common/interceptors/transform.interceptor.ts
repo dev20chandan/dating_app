@@ -23,7 +23,8 @@ export class TransformInterceptor<T>
   ): Observable<Response<T> | any> {
     const request = context.switchToHttp().getRequest();
     // Skip formatting for swagger docs endpoints
-    if (request.url && request.url.startsWith('/api/docs')) {
+    const url = request.originalUrl || request.url;
+    if (url && url.includes('/api/docs')) {
       return next.handle();
     }
 
