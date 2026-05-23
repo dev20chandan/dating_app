@@ -3,6 +3,11 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}
+
 @Schema({ timestamps: true })
 export class User {
   @Prop({ unique: true, sparse: true })
@@ -11,38 +16,14 @@ export class User {
   @Prop({ unique: true, sparse: true })
   phoneNumber?: string;
 
-  @Prop()
+  @Prop({ required: false })
   password?: string;
 
-  @Prop({ required: true })
-  name: string;
+  @Prop({ type: String, enum: UserRole, default: UserRole.USER })
+  role: UserRole;
 
-  @Prop()
-  intent?: string; // 'dating', 'serious', 'marriage'
-
-  @Prop()
-  dob?: string;
-
-  @Prop()
-  identity?: string; // 'male', 'female', 'non-binary'
-
-  @Prop([String])
-  photos?: string[];
-
-  @Prop()
-  video?: string;
-
-  @Prop([String])
-  interests?: string[];
-
-  @Prop()
-  bio?: string;
-
-  @Prop({ type: [Number], default: [18, 99] })
-  matchAgeRange?: number[];
-
-  @Prop({ default: 50 })
-  matchDistance?: number;
+  @Prop({ default: false })
+  isVerified: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

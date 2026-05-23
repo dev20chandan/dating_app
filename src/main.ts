@@ -15,7 +15,13 @@ async function bootstrap() {
   }));
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  
+  const helmet = require('helmet');
+  app.use(helmet());
   app.enableCors();
+  
+  const morgan = require('morgan');
+  app.use(morgan('dev'));
 
   const config = new DocumentBuilder()
     .setTitle('Dating App API')

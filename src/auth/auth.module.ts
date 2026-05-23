@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
@@ -13,9 +14,13 @@ import { Otp, OtpSchema } from './schemas/otp.schema';
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'fallbackSecretKeyForDatingApp123',
-      signOptions: { expiresIn: '60m' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'fallbackSecretKeyForDatingApp123',
+        signOptions: { expiresIn: '60m' },
+      }),
+      inject: [ConfigService],
     }),
     MongooseModule.forFeature([{ name: Otp.name, schema: OtpSchema }]),
   ],
