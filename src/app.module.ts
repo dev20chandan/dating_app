@@ -20,6 +20,8 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { BlocksModule } from './blocks/blocks.module';
 import { ReportsModule } from './reports/reports.module';
 
+import { AdminModule } from './admin/admin.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -59,6 +61,7 @@ import { ReportsModule } from './reports/reports.module';
       inject: [ConfigService],
     }),
     AuthModule, 
+    AdminModule,
     UsersModule, ProfilesModule, InterestsModule, DiscoveryModule, SwipesModule, MatchesModule, RequestsModule, NotificationsModule, BlocksModule, ReportsModule
   ],
   controllers: [AppController],

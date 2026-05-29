@@ -24,6 +24,9 @@ export class User {
 
   @Prop({ default: false })
   isVerified: boolean;
+
+  @Prop({ default: false })
+  isBlocked: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
